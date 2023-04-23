@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams , Navigate, Link  } from "react-router-dom";
+import { useParams , Link , useNavigate   } from "react-router-dom";
 
 function Books(props) {
     const params = useParams();
     const [book, setBook] = useState({});
     const bookcode = params.bookcode;
-
+    const navigate = useNavigate();
     const onSaveClick = () => {
+        
         // send data to the backend via POST
         fetch(`http://localhost:8080/book/save/${bookcode}`, {
             method: bookcode < 0 ? "POST" : "PUT" ,
@@ -17,16 +18,20 @@ function Books(props) {
             }
         })
             .then(response => response.json())
-            .then(data => setBook(data))
+            .then(data => {
+                setBook(data)
+                navigate('/');
+            })
             .catch(err => console.log(err))
     }
+
+    console.log(book)
 
     useEffect(() => {
         fetch(`http://localhost:8080/book/${bookcode}`)
             .then(response => response.json())
             .then(data => setBook(data))
             .catch(err => console.log(err))
-            console.log(book)
     },[]);
 
     return (
@@ -45,10 +50,11 @@ function Books(props) {
                 onChange={e => setBook({ ...book, category: e.target.value })} />
             <br />
             Approved:
-            <input type="checkbox" value={book.approved}
-                onChange={e => setBook({ ...book, approved: e.target.checked })} />
+            <input type="checkbox" value="true"
+    checked={book.approved}
+    onChange={e => setBook({ ...book, approved: e.target.checked })} />
             <br />
-            <Link to={'/'} className="save"  onClick={onSaveClick}>Save</Link>
+            <button  className="save"  onClick={onSaveClick}>Save</button>
         </div>
     )
 }

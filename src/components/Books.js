@@ -9,7 +9,7 @@ function Books(props) {
             .then((response) => response.json())
             .then((data) => setBooks(data))
             .catch((err) => console.log(err))
-    }, []);
+    }, [books]);
 
     const handleDelete = (id ) => {
         fetch(`http://localhost:8080/book/delete/${id}` , {
