@@ -4,6 +4,7 @@ import { useParams , Link , useNavigate   } from "react-router-dom";
 function Books(props) {
     const params = useParams();
     const [book, setBook] = useState({});
+    const [message , setMessage] = useState('')
     const bookcode = params.bookcode;
     const navigate = useNavigate();
     const onSaveClick = () => {
@@ -19,8 +20,13 @@ function Books(props) {
         })
             .then(response => response.json())
             .then(data => {
-                setBook(data)
-                navigate('/');
+                if(data.message !== undefined){
+                    setMessage(data.message)
+                }
+                else{
+                    setBook(data)
+                    navigate('/');
+                }
             })
             .catch(err => console.log(err))
     }
@@ -37,6 +43,7 @@ function Books(props) {
     return (
         <div>
             <h1>{bookcode < 0 ? "New Book" : `Book ${bookcode}`}</h1>
+            <h2>{message}</h2>
             Title:
             <input type="text" value={book.title}
                 onChange={e => setBook({ ...book, title: e.target.value })} />
