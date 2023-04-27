@@ -4,6 +4,7 @@ import { useParams , Link , useNavigate   } from "react-router-dom";
 function Books(props) {
     const params = useParams();
     const [book, setBook] = useState({});
+    const [isDirty, setIsDirty] = useState(false);
     const [message , setMessage] = useState('')
     const bookcode = params.bookcode;
     const navigate = useNavigate();
@@ -39,29 +40,44 @@ function Books(props) {
             .then(data => setBook(data))
             .catch(err => console.log(err))
     },[]);
-
     return (
         <div>
             <h1>{bookcode < 0 ? "New Book" : `Book ${bookcode}`}</h1>
             <h2>{message}</h2>
             Title:
             <input type="text" value={book.title}
-                onChange={e => setBook({ ...book, title: e.target.value })} />
+                onChange={e => {
+                    setBook({ ...book, title: e.target.value })
+                    setIsDirty(true)
+                }
+                } />
             <br />
             Author:
             <input type="text" value={book.author}
-                onChange={e => setBook({ ...book, author: e.target.value })} />
+                 onChange={e => {
+                    setBook({ ...book, author: e.target.value })
+                    setIsDirty(true)
+                }
+                } />
             <br />
             Category:
             <input type="text" value={book.category}
-                onChange={e => setBook({ ...book, category: e.target.value })} />
+                 onChange={e => {
+                    setBook({ ...book, category: e.target.value })
+                    setIsDirty(true)
+                }
+                } />
             <br />
             Approved:
             <input type="checkbox" value="true"
     checked={book.approved}
-    onChange={e => setBook({ ...book, approved: e.target.checked })} />
+    onChange={e => {
+        setBook({ ...book, approved: e.target.value })
+        setIsDirty(true)
+    }
+    }  />
             <br />
-            <button  className="save"  onClick={onSaveClick}>Save</button>
+            <button  className="save" disabled = {!isDirty}  onClick={onSaveClick}>Save</button>
         </div>
     )
 }

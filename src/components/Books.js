@@ -9,8 +9,12 @@ function Books(props) {
             .then((response) => response.json())
             .then((data) => setBooks(data))
             .catch((err) => console.log(err))
-    }, [books]);
-
+    }, []);
+    const handleSearch = (keyword) => {
+        setBooks(books.filter(book => {
+            return book.title.includes(keyword);
+        }))
+    }
     const handleDelete = (id ) => {
         fetch(`http://localhost:8080/book/delete/${id}` , {
             method : "DELETE"
@@ -28,6 +32,7 @@ function Books(props) {
     return (
         <div>
             <h2 className="text-center">Book List</h2>
+            <input placeholder="Enter keyword..." onInput={e => handleSearch(e.target.value)} />
             <div className="row">
                 <Link to = 'books/-1'  className="btn btn-primary">Add Book</Link>
             </div>
